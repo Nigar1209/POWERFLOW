@@ -9,3 +9,55 @@ sources:
       - name: google_ads
       - name: registrations
       - name: transactions
+
+models:
+  - name: stg_google_ads
+    description: attribution_costs per user_id from google_ads campaign
+    columns:
+      - name: device_id
+        description: unique user device_id primary key
+        tests:
+        - not_null
+        - unique
+      - name: attribution_time
+      - name: channel
+      - name: campaign_id
+      - name: attribution_cost
+  - name: stg_transactions
+  - name: registrations_clean
+    description: This model filters out users who haven't completed registration
+    columns: 
+      - name: user_id
+        tests: #tests that would be run on the column
+          - unique
+  - name: marketing_attribution
+    description: Union all the information from Appsflyer and Google Ads
+    columns: 
+      - name: device_id
+        tests:
+          - unique
+          - not_null
+      - name: attribution_cost
+        tests:
+          - not_null
+  - name: int_ltv
+    description: Lifetimevalue of users on a certain day of a lifetime
+    columns: 
+      - name: reg_date
+        tests:
+            - not_null
+      - name: transaction_date
+        tests:
+           - not_null
+  - name: roi
+    description: Users LTV on a certain day with calculated ROI
+    columns: 
+      - name: attribution_cost
+        description: may be 0 for organic users
+        tests:
+            - not_null
+      - name: roi
+        description: calculated as ltv on a day divided by attribution_cost
+        tests:
+           - not_null
+

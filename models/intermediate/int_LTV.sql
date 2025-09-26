@@ -2,7 +2,7 @@ select
     t.user_id,
     t.transaction_date,
     t.daily_revenue,
-    sum(st.daily_revenue) over (
+    sum(t.daily_revenue) over (
         partition by t.user_id order by t.transaction_date
     ) as ltv,
     datediff('day', registration_time::date, transaction_date) as lifetime
